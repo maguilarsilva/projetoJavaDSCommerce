@@ -11,8 +11,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
-
-
 @RestController
 @RequestMapping(value ="/products")
 public class ProductController {
@@ -41,5 +39,11 @@ public class ProductController {
         return ResponseEntity.created(uri).body(productDTO);
     }
 
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<ProductDTO> updatetProduto(@PathVariable Long id,@RequestBody ProductDTO productDTO ){
+        productDTO= productService.updateProduto(id,productDTO);
+        return ResponseEntity.ok(productDTO);
+    }
 
 }
