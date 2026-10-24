@@ -2,12 +2,16 @@ package com.maguilar.projetodscommerce.services;
 
 import com.maguilar.projetodscommerce.dto.ProductDTO;
 import com.maguilar.projetodscommerce.entities.Product;
+import com.maguilar.projetodscommerce.exceptions.DataBaseException;
 import com.maguilar.projetodscommerce.exceptions.ResourceNotFoundException;
 import com.maguilar.projetodscommerce.repositories.ProductRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -22,7 +26,7 @@ public class ProductService {
     public ProductDTO findById(Long id){
 
        Product product =  productRepository.findById(id).orElseThrow(
-                ()-> new ResourceNotFoundException("Recurso não encontrado"));
+                ()-> new ResourceNotFoundException("Recurso não encontrado."));
 
         return new ProductDTO(product);
     }
@@ -32,6 +36,7 @@ public class ProductService {
         Page<Product> listaProduto =  productRepository.findAll(pageable);
         return listaProduto.map(ProductDTO::new);
     }
+
     @Transactional
     public ProductDTO insertProduto(ProductDTO productDTO){
 
@@ -43,13 +48,16 @@ public class ProductService {
 
     @Transactional
     public ProductDTO updateProduto(Long id, ProductDTO productDTO){
+        try {
 
-        Product produce = productRepository.getReferenceById(id);
-        copyDtoToEntity(productDTO,produce);
-        produce = productRepository.save(produce);
-        return new ProductDTO(produce);
+            Product produce = productRepository.getReferenceById(id);
+            copyDtoToEntity(productDTO, produce);
+            produce = productRepository.save(produce);
+            return new ProductDTO(produce);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Recurso não encotrado.");
+        }
     }
-
     private void copyDtoToEntity(ProductDTO productDTO, Product produce){
 
         produce.setName(productDTO.getName());
@@ -58,13 +66,16 @@ public class ProductService {
         produce.setImgUrl(productDTO.getImgUrl());
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.SUPPORTS)
     public void deleteProduto(Long id){
-          productRepository.deleteById(id);
+        if(!productRepository.existsById(id)){
+            throw new ResourceNotFoundException("Recurso não existe.");
+        }
+        try{
+            productRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataBaseException("Fala de integridade referencial");
+        }
     }
-
-
-
-
 
 }
