@@ -69,3 +69,11 @@ INSERT INTO tb_order_item (order_id, product_id, quantity, price) VALUES (3, 1, 
 
 INSERT INTO tb_payment (order_id, moment) VALUES (1, TIMESTAMP WITH TIME ZONE '2022-07-25T15:00:00Z');
 INSERT INTO tb_payment (order_id, moment) VALUES (2, TIMESTAMP WITH TIME ZONE '2022-07-30T11:00:00Z');
+
+INSERT INTO tb_department (name) values ('Administrativo');
+INSERT INTO tb_department (name) values ('Produção');
+
+INSERT INTO tb_person (name, salary, department_id) VALUES ('Ana',5000,1);
+INSERT INTO tb_person (name, salary, department_id) VALUES ('João',4000,1);
+INSERT INTO tb_person (name, salary, department_id) VALUES ('Maria',6000,2);
+INSERT INTO tb_person (name, salary, department_id) VALUES ('Carlos',5000,2);
