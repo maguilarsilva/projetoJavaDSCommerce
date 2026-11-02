@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(value ="/products")
@@ -25,11 +26,11 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity<Page<ProductDTO> >findAll(Pageable pageable){
         Page<ProductDTO> pageProduct = productService.findAll(pageable);
         return ResponseEntity.ok(pageProduct);
-    }
+    }*/
 
     @PostMapping
     public ResponseEntity<ProductDTO> insertProduto(@Valid @RequestBody ProductDTO productDTO){
@@ -41,7 +42,7 @@ public class ProductController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ProductDTO> updatetProduto( @PathVariable Long id,@Valid @RequestBody ProductDTO productDTO ){
+    public ResponseEntity<ProductDTO> updatetProduto(@PathVariable Long id,@Valid  @RequestBody ProductDTO productDTO ){
         productDTO= productService.updateProduto(id,productDTO);
         return ResponseEntity.ok(productDTO);
     }
@@ -50,6 +51,13 @@ public class ProductController {
     public ResponseEntity<Void> deleteProduto(@PathVariable Long id){
         productService.deleteProduto(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ProductDTO>> findByName(
+            @RequestParam(value = "name", defaultValue = "") String name ){
+        List<ProductDTO> result = productService.findByName(name);
+        return ResponseEntity.ok(result);
     }
 
 }
