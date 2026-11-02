@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -78,4 +79,9 @@ public class ProductService {
         }
     }
 
+    @Transactional
+    public List<ProductDTO> findByName(String name) {
+        List<Product> result = productRepository.findByNameIgnoreCase(name);
+        return result.stream().map(ProductDTO::new).toList();
+    }
 }
