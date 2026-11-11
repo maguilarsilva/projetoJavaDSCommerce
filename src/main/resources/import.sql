@@ -77,3 +77,11 @@ INSERT INTO tb_person (name, salary, department_id) VALUES ('Ana',5000,1);
 INSERT INTO tb_person (name, salary, department_id) VALUES ('João',4000,1);
 INSERT INTO tb_person (name, salary, department_id) VALUES ('Maria',6000,2);
 INSERT INTO tb_person (name, salary, department_id) VALUES ('Carlos',5000,2);
+
+INSERT INTO tb_role(authority) values ('ROLE_OPERATOR');
+INSERT INTO tb_role(authority) values ('ROLE_ADMIN');
+
+INSERT INTO tb_user_role (user_id, role_id) VALUES (1,1);
+INSERT INTO tb_user_role (user_id, role_id) VALUES (2,1);
+INSERT INTO tb_user_role (user_id, role_id) VALUES (2,2);
+
